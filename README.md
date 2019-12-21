@@ -6,13 +6,20 @@ Michel Java Server Software for Minecraft: Bedrock Edition.
 第一步实现框架
 
 目前Michel第一步就是把raknet,log,plugin搞定
+
 log和plugin都会有所创新
+
 在此之前是把开发环境搭建起来，实现模块化编程和模块联合编译
+
 raknet,plugin,log用java写就行
+
 具体的话就是log和plugin的创新
 
+
 1.raknet提升效率为主
+
 2. log的异常输出优化，提供专门优化的异常信息输出，并且log信息体现输出所在类名和代码行数(这些事参考目前很多大数据框架的log输出)，log全部提现插件名称
+
 3. plugin在保留原来传统plugin.yml结构同时，添加简易插件加载系统(我之前pr的那个)
 
 另外添加几个待议的
