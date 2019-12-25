@@ -1,5 +1,6 @@
 package cn.michel;
 
+
 /**
  * Michel核心的主启动端,负责一系列的启动任务
  *
@@ -8,6 +9,7 @@ package cn.michel;
 public class Michel {
 
     public static void main(String[] args) {
-
+        Server server = new Server();
+        server.start();
     }
 }

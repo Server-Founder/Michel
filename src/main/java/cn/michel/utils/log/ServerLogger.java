@@ -5,12 +5,22 @@ import org.fusesource.jansi.Ansi;
 
 import java.io.File;
 
+/**
+ * 服务端通用log,
+ */
 public class ServerLogger implements ILogger{
 
     private File parentDir;
 
-    public ServerLogger(File parentDir){
+    private String prefix;
+
+
+    public ServerLogger(File parentDir,String prefix){
         this.parentDir = parentDir;
+    }
+
+    public ServerLogger(File parentDir){
+        this(parentDir,"");
     }
 
     @Override
@@ -60,42 +70,42 @@ public class ServerLogger implements ILogger{
 
     @Override
     public void emergency(String message, Throwable t) {
-        LoggerUtil.printRedLog(message,"EMERGENCY",parentDir,this,t);
+        LoggerUtil.printRedLog(prefix,message,"EMERGENCY",parentDir,this,t);
     }
 
     @Override
     public void alert(String message, Throwable t) {
-        LoggerUtil.printRedLog(message,"ALERT",parentDir,this,t);
+        LoggerUtil.printRedLog(prefix,message,"ALERT",parentDir,this,t);
     }
 
     @Override
     public void critical(String message, Throwable t) {
-        LoggerUtil.printRedLog(message,"CRITICAL",parentDir,this,t);
+        LoggerUtil.printRedLog(prefix,message,"CRITICAL",parentDir,this,t);
     }
 
     @Override
     public void error(String message, Throwable t) {
-        LoggerUtil.printRedLog(message,"ERROR",parentDir,this,t);
+        LoggerUtil.printRedLog(prefix,message,"ERROR",parentDir,this,t);
     }
 
     @Override
     public void warning(String message, Throwable t) {
-        LoggerUtil.printRedLog(message,"WARNING",parentDir,this,t);
+        LoggerUtil.printRedLog(prefix,message,"WARNING",parentDir,this,t);
     }
 
     @Override
     public void notice(String message, Throwable t) {
-        LoggerUtil.printCommonLog(message,"NOTICE", Ansi.Color.YELLOW,parentDir,this,t);
+        LoggerUtil.printCommonLog(prefix,message,"NOTICE", Ansi.Color.YELLOW,parentDir,this,t);
     }
 
     @Override
     public void info(String message, Throwable t) {
-        LoggerUtil.printCommonLog(message,"INFO", Ansi.Color.GREEN,parentDir,this,t);
+        LoggerUtil.printCommonLog(prefix,message,"INFO", Ansi.Color.GREEN,parentDir,this,t);
     }
 
     @Override
     public void debug(String message, Throwable t) {
-        LoggerUtil.printCommonLog(message,"DEBUG", Ansi.Color.YELLOW,parentDir,this,t);
+        LoggerUtil.printCommonLog(prefix,message,"DEBUG", Ansi.Color.YELLOW,parentDir,this,t);
     }
 
     @Override

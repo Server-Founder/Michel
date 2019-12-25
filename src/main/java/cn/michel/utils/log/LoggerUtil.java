@@ -1,6 +1,5 @@
 package cn.michel.utils.log;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.fusesource.jansi.Ansi;
 
@@ -21,6 +20,7 @@ public class LoggerUtil {
     //log文件的格式 2019-12-21-12.log
     public static void fileDatePrintln(Object message, File parentDir) throws IOException {
         String name = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE)+"-"+LocalDateTime.now().getHour()+".log";
+        if(!parentDir.exists())parentDir.mkdirs();
         File file = new File(parentDir,name);
         if(!file.exists()){
             if(!file.createNewFile())return;
@@ -43,7 +43,12 @@ public class LoggerUtil {
 
     public static StackTraceElement getStackTraceElement(){
         StackTraceElement[] elements = new Throwable().getStackTrace();
-        return elements[elements.length-1];
+        StackTraceElement element = elements[elements.length-1];
+        int index = elements.length-1;
+        while (element.getClassName().startsWith("java")){
+            element = elements[index--];
+        }
+        return element;
     }
 
 
@@ -80,27 +85,19 @@ public class LoggerUtil {
         printException(t.getCause(),logger);
     }
 
-    public static void printRedLog(String message,String level,File parentDir,ILogger logger,Throwable t){
+    public static void printRedLog(String prefix,String message,String level,File parentDir,ILogger logger,Throwable t){
         try {
-            LoggerUtil.fileDatePrintln(println(LoggerUtil.getStandardLogMessageForMichel(level, message, Ansi.Color.RED, true)), parentDir);
+            LoggerUtil.fileDatePrintln(println(LoggerUtil.getStandardLogMessageForMichel(level, (prefix==null||prefix.equals("")?"":"["+prefix+"]")+message, Ansi.Color.RED, true)), parentDir);
             LoggerUtil.printException(t,logger);
         }catch (IOException e) {
             LoggerUtil.printException(e,logger);
         }
     }
 
-    public static void printRedLog(String message,String level,File parentDir,ILogger logger){
-        printRedLog(message, level, parentDir, logger,null);
-    }
 
-    public static void printCommonLog(String message, String level, Ansi.Color color,File parentDir,ILogger logger){
-        printCommonLog(message, level, color, parentDir, logger,null);
-
-    }
-
-    public static void printCommonLog(String message, String level, Ansi.Color color,File parentDir,ILogger logger,Throwable t){
+    public static void printCommonLog(String prefix,String message, String level, Ansi.Color color,File parentDir,ILogger logger,Throwable t){
         try {
-            LoggerUtil.fileDatePrintln(println(LoggerUtil.getStandardLogMessageForMichel(level, message, color, false)), parentDir);
+            LoggerUtil.fileDatePrintln(println(LoggerUtil.getStandardLogMessageForMichel(level,(prefix==null||prefix.equals("")?"":"["+prefix+"]")+ message, color, false)), parentDir);
             LoggerUtil.printException(t,logger);
         }catch (IOException e) {
             LoggerUtil.printException(e,logger);

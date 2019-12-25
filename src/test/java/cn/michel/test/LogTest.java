@@ -10,7 +10,7 @@ public class LogTest {
 
     public static void main(String[] args) {
         ServerLogger logger = new ServerLogger(new File("/Users/luchangcun/IdeaProjects/logfile"));
-        logger.info("hello,world");
+        logger.info("hello,world",new NullPointerException());
     }
 
 }
