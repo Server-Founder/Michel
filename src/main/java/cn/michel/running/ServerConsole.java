@@ -1,6 +1,7 @@
 package cn.michel.running;
 
 import cn.michel.Server;
+import cn.michel.command.CommandSender;
 import cn.michel.utils.config.ServerResourceUtil;
 import jline.console.ConsoleReader;
 import org.apache.commons.io.FileUtils;
@@ -8,7 +9,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class ServerConsole {
+public class ServerConsole extends CommandSender {
 
     private static final String CHOOSE_FILE = "choose.txt";
 
@@ -43,7 +44,7 @@ public class ServerConsole {
                 server.setLanguage(lang);
 
                 while (!(server.getState()==Server.STOPPED)) {
-                    reader.readLine(">");
+                    server.getCommandMap().dispatch(this,reader.readLine(">"));
                 }
             }catch (IOException e){
                 server.stop();

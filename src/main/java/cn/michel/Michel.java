@@ -2,9 +2,11 @@ package cn.michel;
 
 
 /**
- * Michel核心的主启动端,负责一系列的启动任务
+ * Michel核心的主启动类，在这里将Michel核心的一系列工作组织起来
+ * 事实上，在服务端开启后主线程已经关闭，正在工作的则是服务端的线
+ * 程。
  *
- * Michel核心是一款基于java的minecraft : BE轻量级服务端
+ * @author MagicLu
  */
 public class Michel {
 

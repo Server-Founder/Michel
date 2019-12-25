@@ -1,16 +1,25 @@
 package cn.michel;
 
-import cn.michel.running.ServerCommandExecutor;
+import cn.michel.command.CommandMap;
+import cn.michel.command.SimpleCommandMap;
 import cn.michel.utils.log.ILogger;
 import cn.michel.utils.log.ServerLogger;
 import cn.michel.running.ServerConsole;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Michel核心的服务端类，是一个单例对象，实例化后，通过start
+ * 对其进行开启，其开启后，是以非主线程形式运行。
+ *
+ * @author MagicLu
+ */
 public class Server {
 
     public static final String LANG = "lang.txt";
@@ -39,17 +48,15 @@ public class Server {
 
     private String language;
 
+    private AtomicInteger state;
 
-
-    private ServerCommandExecutor executor;
-
-    private int state = -1;
-
+    private CommandMap commandMap;
 
 
     Server(){
+        AnsiConsole.systemInstall();
         Server.server = this;
-        this.state = STARTING;
+        this.state = new AtomicInteger(STARTING);
         this.baseFile = new File(Server.class.getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile();
         this.logFile = new File(baseFile,"logs");
         this.logger = new ServerLogger(logFile,"");
@@ -57,7 +64,7 @@ public class Server {
         this.serverExecutor = Executors.newFixedThreadPool(10);
         this.serverConfigs = new HashMap<>();
         this.registerConfigs();
-        this.executor = new ServerCommandExecutor(server);
+        this.commandMap = new SimpleCommandMap(server);
     }
 
     public void registerConfigs(){
@@ -66,10 +73,12 @@ public class Server {
 
     public void start(){
         console.start();
-        this.state = STARTED;
+        this.state.compareAndSet(STARTING,STARTED);
     }
     public void stop(){
-
+        this.state.compareAndSet(STARTED,STOPPING);
+        this.state.compareAndSet(STOPPING,STOPPED);
+        System.exit(0);//TODO 姑且先这样
     }
 
     public File getBaseFile() {
@@ -93,7 +102,7 @@ public class Server {
     }
 
     public int getState() {
-        return state;
+        return state.get();
     }
 
     public Map<String, File> getServerConfigs() {
@@ -112,5 +121,9 @@ public class Server {
 
     public String getLanguage() {
         return language;
+    }
+
+    public CommandMap getCommandMap() {
+        return commandMap;
     }
 }
