@@ -8,22 +8,37 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 public class LoggerUtil {
 
-    public static void println(Object message){
+    public static Object println(Object message){
         System.out.println(message);
+        return message;
     }
 
     //log文件的格式 2019-12-21-12.log
     public static void fileDatePrintln(Object message, File parentDir) throws IOException {
-        String name = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE)+"-"+LocalDateTime.now().getHour();
+        String name = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE)+"-"+LocalDateTime.now().getHour()+".log";
         File file = new File(parentDir,name);
         if(!file.exists()){
-            file.createNewFile();
+            if(!file.createNewFile())return;
         }
-        FileUtils.write(file,message.toString(), Charsets.toCharset(System.getProperty("file.encoding")));
+        String encoding = System.getProperty("file.encoding");
+        List<String> lines = FileUtils.readLines(file,encoding);
+        Thread thread = Thread.currentThread();
+        lines.add(new StringBuilder()
+                .append("[")
+                .append("Thread")
+                .append(" ")
+                .append(thread.getName())
+                .append("-")
+                .append(thread.getId())
+                .append("]")
+                .append(message.toString()
+                        .replaceAll("\\033\\[[0-9]+m","")).toString());
+        FileUtils.writeLines(file,encoding,lines);
     }
 
     public static StackTraceElement getStackTraceElement(){
@@ -67,8 +82,7 @@ public class LoggerUtil {
 
     public static void printRedLog(String message,String level,File parentDir,ILogger logger,Throwable t){
         try {
-            LoggerUtil.getStandardLogMessageForMichel(level, message, Ansi.Color.RED, true);
-            LoggerUtil.fileDatePrintln(message, parentDir);
+            LoggerUtil.fileDatePrintln(println(LoggerUtil.getStandardLogMessageForMichel(level, message, Ansi.Color.RED, true)), parentDir);
             LoggerUtil.printException(t,logger);
         }catch (IOException e) {
             LoggerUtil.printException(e,logger);
@@ -86,8 +100,7 @@ public class LoggerUtil {
 
     public static void printCommonLog(String message, String level, Ansi.Color color,File parentDir,ILogger logger,Throwable t){
         try {
-            LoggerUtil.getStandardLogMessageForMichel(level, message, color, false);
-            LoggerUtil.fileDatePrintln(message, parentDir);
+            LoggerUtil.fileDatePrintln(println(LoggerUtil.getStandardLogMessageForMichel(level, message, color, false)), parentDir);
             LoggerUtil.printException(t,logger);
         }catch (IOException e) {
             LoggerUtil.printException(e,logger);
