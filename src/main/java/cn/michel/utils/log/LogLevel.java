@@ -6,7 +6,7 @@ import java.util.function.BiConsumer;
 
 public enum LogLevel {
 
-    NONE((Message m,ILogger logger)->{}),
+    NONE((Message m, ILogger logger)->{}),
     EMERGENCY((Message m, ILogger logger)->logger.emergency(m.message,m.throwable)),
     ALERT((Message m, ILogger logger)->logger.alert(m.message,m.throwable)),
     CRITICAL((Message m, ILogger logger)->logger.critical(m.message,m.throwable)),

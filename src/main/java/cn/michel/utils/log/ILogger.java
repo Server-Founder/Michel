@@ -1,5 +1,6 @@
 package cn.michel.utils.log;
 
+
 /**
  * 接口
  */
