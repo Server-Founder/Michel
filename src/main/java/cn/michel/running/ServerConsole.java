@@ -10,7 +10,8 @@ import java.io.IOException;
 
 public class ServerConsole {
 
-    public static final String CHOOSE_FILE = "choose.txt";
+    private static final String CHOOSE_FILE = "choose.txt";
+
     private ConsoleReader reader;
 
     private Server server;

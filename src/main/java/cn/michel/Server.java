@@ -1,5 +1,6 @@
 package cn.michel;
 
+import cn.michel.running.ServerCommandExecutor;
 import cn.michel.utils.log.ILogger;
 import cn.michel.utils.log.ServerLogger;
 import cn.michel.running.ServerConsole;
@@ -38,7 +39,12 @@ public class Server {
 
     private String language;
 
+
+
+    private ServerCommandExecutor executor;
+
     private int state = -1;
+
 
 
     Server(){
@@ -46,11 +52,12 @@ public class Server {
         this.state = STARTING;
         this.baseFile = new File(Server.class.getProtectionDomain().getCodeSource().getLocation().getFile()).getParentFile();
         this.logFile = new File(baseFile,"logs");
-        this.logger = new ServerLogger(logFile,"MAIN");
+        this.logger = new ServerLogger(logFile,"");
         this.console = new ServerConsole(server);
         this.serverExecutor = Executors.newFixedThreadPool(10);
         this.serverConfigs = new HashMap<>();
         this.registerConfigs();
+        this.executor = new ServerCommandExecutor(server);
     }
 
     public void registerConfigs(){

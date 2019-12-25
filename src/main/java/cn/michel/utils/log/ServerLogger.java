@@ -16,6 +16,7 @@ public class ServerLogger implements ILogger{
 
 
     public ServerLogger(File parentDir,String prefix){
+        this.prefix = prefix;
         this.parentDir = parentDir;
     }
 
