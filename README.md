@@ -1,6 +1,8 @@
 # Michel
 Michel Java Server Software for Minecraft: Bedrock Edition.
 
+项目尚未开启，将在1.20正式起航
+
 一个轻量级的服务端框架,基于nukkit而开发，目前正在开发过程..
 
 第一步实现框架
