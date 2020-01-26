@@ -12,7 +12,7 @@ public class PluginBase implements Plugin{
 
     @Override
     public void onLoad() {
-        
+
     }
 
     @Override
